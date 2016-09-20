@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="routeApp">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+    <h1>메인 홈페이지 배너</h1>
+    <ul>
+        <li><a href="#home">홈</a></li>
+        <li><a href="#profile">프로필</a></li>
+    </ul>
+    <div id="content">
+        <!--ng-view directive 안에 view 페이지 변경-->
+        <ng-view>
 
+        </ng-view>
+    </div>
+    <script src="js/angular.js"></script>
+    <script src="js/angular-route.min.js"></script>
+    <script>
+        var app = angular.module('routeApp',['ngRoute']);
+        app.config(function($routeProvider){
+            $routeProvider.when('/home',{
+                templateUrl:"view/home.html",
+                controller:"homeCtrl"
+            });
+            $routeProvider.when('/profile',{
+                templateUrl:"view/profile.html",
+                controller:"profileCtrl"
+            });
+            $routeProvider.when('/profile/:id',{
+                templateUrl:"view/detail.html",
+                controller:"detailCtrl"
+            });
+            $routeProvider.otherwise({
+                redirectTo:"/home"
+            });
+        });
+        var list =[
+            {"no":0, "name":'경력사항', "detail":'경력상세내용'},
+            {"no":1, "name":'학력사항', "detail":'학력상세내용'},
+            {"no":2, "name":'특기사항', "detail":'특기상세내용'}
+        ];
+        app.controller('homeCtrl',['$scope',function($scope){
+            $scope.name="홍길동";
+        }]);
+        app.controller('profileCtrl',['$scope',function($scope){
+            $scope.list=list;
+        }]);
+        app.controller('detailCtrl',['$scope','$routeParams',function($scope,$routeParams){
+            $scope.obj=list[$routeParams.id]; //index number of list
+        }]);
+    </script>
 </body>
 </html>
